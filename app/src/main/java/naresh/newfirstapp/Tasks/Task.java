@@ -1,19 +1,16 @@
 package naresh.newfirstapp.Tasks;
 
-import android.app.ActionBar;
 import android.os.AsyncTask;
 import android.util.Log;
-import android.widget.Toast;
 
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.List;
 
 import naresh.newfirstapp.Convert.AllData;
 import naresh.newfirstapp.JsonURL.Link;
 import naresh.newfirstapp.Models.Pojo;
 import naresh.newfirstapp.Models.TableDetails;
+import naresh.newfirstapp.callbacks.TableDetailsCallback;
 
 /**
  * Created by Naresh on 14-12-2016.
@@ -26,18 +23,26 @@ public class Task extends AsyncTask<Object, Object, JSONObject>
     Pojo pojoDetails;
     TableDetails tableDetails;
     AllData allData;
-    public Task(String Link)
+    TableDetailsCallback callback;
+    public Task(TableDetailsCallback callback, String Link)
     {
-        Link = LinkUr;
+        LinkUr = Link;
+        this.callback = callback;
 
     }
+
+
 
     @Override
     protected JSONObject doInBackground(Object... voids)
     {
-        JSONObject ja = Link.requestJSON(LinkUr, null);
+        JSONObject ja = Link.requestJSON(LinkUr);
 
-        Log.d("Don in Background","Array of items exicuted");
+        try {
+            Log.d("Don in Background","Array of items exicuted" + ja.getBoolean("status"));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
         return ja;
     }
 
@@ -48,10 +53,7 @@ public class Task extends AsyncTask<Object, Object, JSONObject>
         allData = new AllData();
         tableDetails = new TableDetails();
         pojoDetails = allData.getData(ja);
-
         tableDetails = pojoDetails.getMessage();
-
-        Log.d("Post Execute", "Post execute completd" + tableDetails.getAndroidUsers());
-
+        callback.onSuccess(tableDetails);
     }
 }

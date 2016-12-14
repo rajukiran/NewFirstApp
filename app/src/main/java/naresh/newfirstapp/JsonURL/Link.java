@@ -4,7 +4,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.BufferedReader;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -17,7 +16,7 @@ import java.net.HttpURLConnection;
 
 public class Link
 {
-        public static JSONObject requestJSON(String url, JSONObject jsonParam ) {
+        public static JSONObject requestJSON(String url) {
             JSONObject response = new JSONObject();
             InputStream is = null;
             try {
@@ -27,13 +26,6 @@ public class Link
                 conn.setConnectTimeout(20000 /* milliseconds */);
                 conn.setRequestMethod("GET");
                 conn.setDoInput(true);
-                conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-                conn.setRequestProperty("charset", "utf-8");
-                conn.setUseCaches (false);
-                DataOutputStream wr = new DataOutputStream(conn.getOutputStream ());
-                wr.writeBytes(jsonParam.toString());
-                wr.flush();
-                wr.close();
                 // Starts the query
                 conn.connect();
                 int responsee = conn.getResponseCode();
